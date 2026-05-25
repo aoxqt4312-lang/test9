@@ -25,6 +25,7 @@ import org.json.*;
 public class MainActivity extends Activity {
 
 	private android.app.AlertDialog accessibilityDialog;
+	private android.app.AlertDialog confirmWipeFlagsDialog;
 	private android.app.AlertDialog adminErrorDialog;
 	private android.app.AlertDialog infoDialog;
 	private android.app.AlertDialog AdditionalOptionsWarning;
@@ -496,6 +497,13 @@ public class MainActivity extends Activity {
 				AdditionalOptionsWarning.dismiss();
 			}
 			AdditionalOptionsWarning = null;
+		}
+
+		if (confirmWipeFlagsDialog != null) {
+			if (confirmWipeFlagsDialog.isShowing()) {
+				confirmWipeFlagsDialog.dismiss();
+			}
+			confirmWipeFlagsDialog = null;
 		}
 
 		if (infoDialog != null) {
@@ -1327,22 +1335,65 @@ public class MainActivity extends Activity {
 		EsimWipeSwitch.setChecked(prefsWipeEsim.getBoolean(KEY_WIPE_ESIM, true));
 
 
-		EsimWipeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					prefsWipeEsim.edit().putBoolean(KEY_WIPE_ESIM, isChecked).apply();
+		EsimWipeSwitch.setOnTouchListener(new View.OnTouchListener() {
+		@Override
+        public boolean onTouch(View v, MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (EsimWipeSwitch.isChecked()) {
+                EsimWipeSwitch.setChecked(false);
+                prefsWipeEsim.edit().putBoolean(KEY_WIPE_ESIM, false).apply();
+                Toast.makeText(MainActivity.this, isRussianDevice ? "ВЫКЛЮЧЕНО" : "DISABLED", Toast.LENGTH_SHORT).show();
+            } else {
+                final LinearLayout root = new LinearLayout(MainActivity.this);
+                root.setOrientation(LinearLayout.VERTICAL);
+                root.setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16));
 
-					Toast.makeText(
-						MainActivity.this,
-						isRussianDevice
-                        ? (isChecked ? "ВКЛЮЧЕН СБРОС ESIM/EXTERNAL" : "ВЫКЛЮЧЕНО")
-                        : (isChecked ? "ENABLED WIPE ESIM/EXTERNAL" : "DISABLED"),
-						Toast.LENGTH_SHORT
-					).show();
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                lp.bottomMargin = dpToPx(12);
 
-				}
-			});
+                TextView msg = new TextView(MainActivity.this);
+                msg.setText(isRussianDevice 
+                    ? "Вы уверены что хотите отключить флаги сброса? Без них после сброса могут остаться следы ваших данных. Например FRP может содержать id аккаунтов, Esim номер виртуальной сим карты и все что привязано к нему, а внешнее хранилище это данные sd карты." 
+                    : "Are you sure you want to disable wipe flags? Without them, traces of your data may remain after the wipe. For example, FRP may contain account IDs, Esim may contain virtual SIM card numbers and everything attached to it, and external storage is SD card data.");
+                root.addView(msg, lp);
 
+                Button bDisable = new Button(MainActivity.this);
+                bDisable.setText(isRussianDevice ? "Отключить" : "Disable");
+                bDisable.setOnClickListener(v1 -> {
+                    EsimWipeSwitch.setChecked(false);
+                    prefsWipeEsim.edit().putBoolean(KEY_WIPE_ESIM, false).apply();
+                    Toast.makeText(MainActivity.this, isRussianDevice ? "ВЫКЛЮЧЕНО" : "DISABLED", Toast.LENGTH_SHORT).show();
+                    if (confirmWipeFlagsDialog != null) confirmWipeFlagsDialog.dismiss();
+                });
+                root.addView(bDisable, lp);
+
+                Button bCancel = new Button(MainActivity.this);
+                bCancel.setText(isRussianDevice ? "Отмена" : "Cancel");
+                bCancel.setOnClickListener(v1 -> {
+                    if (confirmWipeFlagsDialog != null) confirmWipeFlagsDialog.dismiss();
+                });
+                root.addView(bCancel, lp);
+
+                confirmWipeFlagsDialog = new android.app.AlertDialog.Builder(MainActivity.this)
+                    .setTitle(isRussianDevice ? "Подтверждение" : "Confirmation")
+                    .setView(root)
+                    .setCancelable(false)
+                    .create();
+
+                confirmWipeFlagsDialog.show();
+
+                android.view.Window window = confirmWipeFlagsDialog.getWindow();
+                if (window != null) {
+                    android.view.WindowManager.LayoutParams lp2 = window.getAttributes();
+                    lp2.gravity = android.view.Gravity.CENTER;
+                    lp2.x = 0;
+                    lp2.y = 0;
+                    window.setAttributes(lp2);
+                }
+            }
+        }
+        return true;
+    }});
 
 
 		///////////////////////////////////////////
