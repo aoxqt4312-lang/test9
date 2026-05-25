@@ -493,6 +493,13 @@ public class MainActivity extends Activity {
 		isPendingAdmin = 0;
 		AdditionalOptionsBack=null;
 		
+		if (chargingWarningDialog != null) {
+			if (chargingWarningDialog.isShowing()) {
+				chargingWarningDialog.dismiss();
+			}
+			chargingWarningDialog = null;
+		}	
+		
 		if (AdditionalOptionsWarning != null) {
 			if (AdditionalOptionsWarning.isShowing()) {
 				AdditionalOptionsWarning.dismiss();
