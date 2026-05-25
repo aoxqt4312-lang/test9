@@ -25,6 +25,7 @@ import org.json.*;
 public class MainActivity extends Activity {
 
 	private android.app.AlertDialog accessibilityDialog;
+	private android.app.AlertDialog chargingWarningDialog;
 	private android.app.AlertDialog confirmWipeFlagsDialog;
 	private android.app.AlertDialog adminErrorDialog;
 	private android.app.AlertDialog infoDialog;
