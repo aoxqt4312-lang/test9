@@ -1335,41 +1335,39 @@ public class MainActivity extends Activity {
 		EsimWipeSwitch.setChecked(prefsWipeEsim.getBoolean(KEY_WIPE_ESIM, true));
 
 
-		EsimWipeSwitch.setOnTouchListener(new View.OnTouchListener() {
-		@Override
-        public boolean onTouch(View v, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_UP) {
+		EsimWipeSwitch.setOnTouchListener(new android.view.View.OnTouchListener() {
+        @Override
+        public boolean onTouch(android.view.View v, android.view.MotionEvent event) {
+        if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
             if (EsimWipeSwitch.isChecked()) {
-                EsimWipeSwitch.setChecked(false);
-                prefsWipeEsim.edit().putBoolean(KEY_WIPE_ESIM, false).apply();
-                Toast.makeText(MainActivity.this, isRussianDevice ? "ВЫКЛЮЧЕНО" : "DISABLED", Toast.LENGTH_SHORT).show();
-            } else {
-                final LinearLayout root = new LinearLayout(MainActivity.this);
-                root.setOrientation(LinearLayout.VERTICAL);
+                EsimWipeSwitch.setChecked(true);
+                
+                final android.widget.LinearLayout root = new android.widget.LinearLayout(MainActivity.this);
+                root.setOrientation(android.widget.LinearLayout.VERTICAL);
                 root.setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16));
 
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                android.widget.LinearLayout.LayoutParams lp = new android.widget.LinearLayout.LayoutParams(android.widget.LinearLayout.LayoutParams.MATCH_PARENT, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT);
                 lp.bottomMargin = dpToPx(12);
 
-                TextView msg = new TextView(MainActivity.this);
+                android.widget.TextView msg = new android.widget.TextView(MainActivity.this);
                 msg.setText(isRussianDevice 
                     ? "Вы уверены что хотите отключить флаги сброса? Без них после сброса могут остаться следы ваших данных. Например FRP может содержать id аккаунтов, Esim номер виртуальной сим карты и все что привязано к нему, а внешнее хранилище это данные sd карты." 
                     : "Are you sure you want to disable wipe flags? Without them, traces of your data may remain after the wipe. For example, FRP may contain account IDs, Esim may contain virtual SIM card numbers and everything attached to it, and external storage is SD card data.");
                 root.addView(msg, lp);
 
-                Button bDisable = new Button(MainActivity.this);
+                android.widget.Button bDisable = new android.widget.Button(MainActivity.this);
                 bDisable.setText(isRussianDevice ? "Отключить" : "Disable");
                 bDisable.setOnClickListener(v1 -> {
                     EsimWipeSwitch.setChecked(false);
                     prefsWipeEsim.edit().putBoolean(KEY_WIPE_ESIM, false).apply();
-                    Toast.makeText(MainActivity.this, isRussianDevice ? "ВЫКЛЮЧЕНО" : "DISABLED", Toast.LENGTH_SHORT).show();
                     if (confirmWipeFlagsDialog != null) confirmWipeFlagsDialog.dismiss();
                 });
                 root.addView(bDisable, lp);
 
-                Button bCancel = new Button(MainActivity.this);
+                android.widget.Button bCancel = new android.widget.Button(MainActivity.this);
                 bCancel.setText(isRussianDevice ? "Отмена" : "Cancel");
                 bCancel.setOnClickListener(v1 -> {
+                    EsimWipeSwitch.setChecked(true);
                     if (confirmWipeFlagsDialog != null) confirmWipeFlagsDialog.dismiss();
                 });
                 root.addView(bCancel, lp);
@@ -1390,10 +1388,14 @@ public class MainActivity extends Activity {
                     lp2.y = 0;
                     window.setAttributes(lp2);
                 }
+            } else {
+                EsimWipeSwitch.setChecked(true);
+                prefsWipeEsim.edit().putBoolean(KEY_WIPE_ESIM, true).apply();
             }
         }
         return true;
     }});
+
 
 
 		///////////////////////////////////////////
