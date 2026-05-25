@@ -1048,8 +1048,8 @@ public class MainActivity extends Activity {
 
 		ae.setText(
 			isRussianDevice
-			? "Запускать фейковое поле ввода пароля при каждом включении экрана и перезагрузке, чтобы в случае чего вы могли ввести туда код сброса данных. Для запуска использует спецвозможности или разрешение на наложение поверх других окон. Включайте это как альтернативу клавиатуре, если она не работает у вас на экране блокировки (что бывает на некоторых китайских телефонах, например: Realme)."
-			: "Launch a fake password input field upon every screen on and reboot, so that in case of something you can enter the data wipe code there. For launching uses Accessibility or overlay permission. Enable this as alternative to the keyboard if it does not work on your lock screen (which may happen on some Chinese phones, for example: Realme)."
+			? "Запускать фейковое поле ввода пароля при каждом включении экрана и первоначальной загрузке системы, чтобы в случае чего вы могли ввести туда код сброса данных. Для запуска использует спецвозможности или разрешение на наложение поверх других окон. Включайте это как альтернативу клавиатуре, если она не работает у вас на экране блокировки (что бывает на некоторых китайских телефонах, например: Realme)."
+			: "Launch a fake password input field upon every screen on and initial system boot, so that in case of something you can enter the data wipe code there. For launching uses Accessibility or overlay permission. Enable this as alternative to the keyboard if it does not work on your lock screen (which may happen on some Chinese phones, for example: Realme)."
 		);
 
 
