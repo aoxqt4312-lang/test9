@@ -1481,7 +1481,7 @@ public class MainActivity extends Activity {
 						final boolean currentState = chargingBlockSwitch.isChecked();
 
 						if (!currentState) {
-							new AlertDialog.Builder(MainActivity.this)
+							chargingWarningDialog = new AlertDialog.Builder(MainActivity.this)
 								.setTitle(isRussianDevice ? "Подтверждение" : "Confirmation")
 								.setMessage(isRussianDevice
 											? "Вы уверены? Если вы прямо сейчас заряжаете телефон, то данные могут стереться прямо сейчас"
